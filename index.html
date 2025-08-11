@@ -548,9 +548,9 @@
         </button>
         <div class="timeline-controls" id="timelineControls" style="display:none;"><div class="control-section">
                 <div class="control-section-title">Timeline Controls</div>
-                <div id="modeIndicator" class="mode-indicator">Real-Time Mode (GMT)</div>
+                <div id="modeIndicator" class="mode-indicator">Real-Time Mode (CDT)</div>
                 <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                    <button id="startTimeline">Real-Time (GMT)</button>
+                    <button id="startTimeline">Real-Time (CDT)</button>
                     <button id="startAnimation">Animation</button>
                     <button id="stopTimeline">Pause</button>
                     <button id="resetTimeline">Reset</button>
@@ -572,7 +572,7 @@
                         <input type="number" id="eventStartHour" min="0" max="23" step="1" placeholder="Hour" style="width: 60px;">
                         <span>:</span>
                         <input type="number" id="eventStartMinute" min="0" max="59" step="1" placeholder="Min" style="width: 60px;">
-                        <span style="margin-left: 4px; font-size: 0.8rem; color: #666;">GMT</span>
+                        <span style="margin-left: 4px; font-size: 0.8rem; color: #666;">CDT</span>
                     </div>
                 </div>
                 <div class="form-row">
@@ -581,7 +581,7 @@
                         <input type="number" id="eventEndHour" min="0" max="23" step="1" placeholder="Hour" style="width: 60px;">
                         <span>:</span>
                         <input type="number" id="eventEndMinute" min="0" max="59" step="1" placeholder="Min" style="width: 60px;">
-                        <span style="margin-left: 4px; font-size: 0.8rem; color: #666;">GMT</span>
+                        <span style="margin-left: 4px; font-size: 0.8rem; color: #666;">CDT</span>
                     </div>
                 </div>                <div class="form-row">
                     <label for="eventSection">Section</label>
@@ -627,7 +627,7 @@
                         <input type="number" id="editEventStartHour" min="0" max="23" step="1" placeholder="Hour" style="width: 60px;">
                         <span>:</span>
                         <input type="number" id="editEventStartMinute" min="0" max="59" step="1" placeholder="Min" style="width: 60px;">
-                        <span style="margin-left: 4px; font-size: 0.8rem; color: #666;">GMT</span>
+                        <span style="margin-left: 4px; font-size: 0.8rem; color: #666;">CDT</span>
                     </div>
                 </div>                <div class="form-row">
                     <label for="editEventEndHour">End</label>
@@ -635,7 +635,7 @@
                         <input type="number" id="editEventEndHour" min="0" max="23" step="1" placeholder="Hour" style="width: 60px;">
                         <span>:</span>
                         <input type="number" id="editEventEndMinute" min="0" max="59" step="1" placeholder="Min" style="width: 60px;">
-                        <span style="margin-left: 4px; font-size: 0.8rem; color: #666;">GMT</span>
+                        <span style="margin-left: 4px; font-size: 0.8rem; color: #666;">CDT</span>
                     </div>
                 </div>
                 <div class="form-row">
@@ -664,22 +664,89 @@
                     <button id="cancelEditBtn" class="secondary">Cancel</button>
                 </div>
             </div>
+            
+            <div class="control-section">
+                <div class="control-section-title">Time Adjustment</div>
+                <div class="form-row">
+                    <label for="adjustmentHours">Hours</label>
+                    <input type="number" id="adjustmentHours" min="-23" max="23" step="1" placeholder="0" style="width: 80px;">
+                </div>
+                <div class="form-row">
+                    <label for="adjustmentMinutes">Minutes</label>
+                    <input type="number" id="adjustmentMinutes" min="-59" max="59" step="1" placeholder="0" style="width: 80px;">
+                </div>
+                <div class="form-row">
+                    <label for="adjustmentSection">Apply to Section</label>
+                    <select id="adjustmentSection">
+                        <option value="section1">Mission (Section 1)</option>
+                        <option value="section2">SER (Section 2)</option>
+                        <option value="section3">SMOR (Section 3)</option>
+                    </select>
+                </div>
+                <div style="display: flex; gap: 8px; margin-top: 8px;">
+                    <button id="applyTimeAdjustmentBtn">Apply Adjustment</button>
+                    <button id="clearAdjustmentBtn" class="secondary">Clear</button>
+                </div>
+                <div style="font-size: 0.8rem; color: #666; margin-top: 8px;">
+                    Use positive values to shift events later, negative to shift earlier. Times that go beyond 24:00 will wrap to the next day.
+                </div>
+            </div>
+            
+            <div class="control-section">
+                <div class="control-section-title">Timeline Viewport</div>
+                <div class="form-row">
+                    <label for="viewportStartHour">Start Hour</label>
+                    <input type="number" id="viewportStartHour" min="0" max="23" step="1" value="0" style="width: 80px;">
+                </div>
+                <div class="form-row">
+                    <label for="viewportEndHour">End Hour</label>
+                    <input type="number" id="viewportEndHour" min="1" max="24" step="1" value="24" style="width: 80px;">
+                </div>
+                <div style="display: flex; gap: 8px; margin-top: 8px;">
+                    <button id="applyViewportBtn">Apply Viewport</button>
+                    <button id="resetViewportBtn" class="secondary">Reset (0-24h)</button>
+                </div>
+                <div style="font-size: 0.8rem; color: #666; margin-top: 8px;">
+                    Set custom time range to zoom into specific periods. Events outside the range will be hidden but timers remain accurate.
+                </div>
+            </div>
+            
+            <!-- Data Management Section -->
+            <div class="menu-section">
+                <div class="control-section-title">Data Management</div>
+                <div style="display: flex; gap: 8px; margin-bottom: 8px;">
+                    <button id="exportDataBtn" class="secondary">Export Data</button>
+                    <button id="importDataBtn" class="secondary">Import Data</button>
+                </div>
+                <div style="display: flex; gap: 8px;">
+                    <button id="clearDataBtn" style="background-color: #e74c3c; color: white;">Clear All Data</button>
+                </div>
+                <div id="dataStatus" style="font-size: 0.8rem; color: #666; margin-top: 8px;">
+                    Data is automatically saved to browser storage
+                </div>
+                <input type="file" id="importFileInput" accept=".json" style="display: none;">
+            </div>
         </div>
     </div>
-    <script>    // Render static hashline with horizontal ticks and labels using GMT time
+    <script>    // Render static hashline with horizontal ticks and labels using CDT time
     function renderStaticHashmarks() {
         const track = document.getElementById('timeline-hashmarks-track');
         const ticks = document.getElementById('timeline-ticks');
         track.innerHTML = '';
         ticks.innerHTML = '';
-        const range = 24;
+        
+        // Use viewport settings to determine the range
+        const startHour = viewportStartHour;
+        const endHour = viewportEndHour;
+        const range = endHour - startHour;
         
         // Get current timezone offset in hours
         const date = new Date();
         const timeZoneOffset = date.getTimezoneOffset() / 60;
-        const timeZoneName = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        const timeZoneName = 'America/Chicago'; // Fixed to CDT timezone
         
         for (let i = 0; i <= range; i++) {
+            const actualHour = startHour + i;
             const percent = (i / range) * 100;
             // Tick
             const tick = document.createElement('div');
@@ -687,19 +754,19 @@
             tick.style.left = percent + '%';
             ticks.appendChild(tick);
             
-            // Label with actual time (UTC/GMT)
+            // Label with actual time (CDT)
             const label = document.createElement('div');
             label.className = 'timeline-label';
             label.style.left = percent + '%';
             
-            // Format the time label
-            let hour = i;
+            // Format the time label - use actual hour for display
+            let hour = actualHour;
             const hourPadded = hour.toString().padStart(2, '0');
             let timeText = `${hourPadded}:00`;
             
-            // Add GMT indicator for major ticks only to avoid clutter
+            // Add CDT indicator for major ticks only to avoid clutter
             if (i % 4 === 0) {
-                timeText = `${timeText}\nGMT`;
+                timeText = `${timeText}\nCDT`;
             }
             
             label.innerHTML = timeText;
@@ -710,14 +777,30 @@
         timezoneIndicator.className = 'timezone-indicator';
         
         // Format the timezone name to be more readable
-        const formattedTimeZone = timeZoneName.replace('/', ' - ').replace('_', ' ');
-        timezoneIndicator.innerHTML = `<span style="font-weight: 600;">Local Timezone:</span> ${formattedTimeZone}`;
+        const formattedTimeZone = 'Central Daylight Time (CDT)';
+        timezoneIndicator.innerHTML = `<span style="font-weight: 600;">Fixed Timezone:</span> ${formattedTimeZone}`;
         
         // Append to the parent of ticks for better positioning
         const parent = document.querySelector('.timeline-bar.timeline-hashmarks');
         parent.appendChild(timezoneIndicator);
-    }document.addEventListener('DOMContentLoaded', function() {
+    }
+    
+    // Combined DOMContentLoaded handler for proper initialization order
+    document.addEventListener('DOMContentLoaded', function() {
+        // Ensure event blocks containers exist for both sections
+        ensureEventBlocksContainers();
+        
+        // Load saved events and viewport settings from local storage FIRST
+        loadEvents();
+        
+        // Now render the hashline with the loaded viewport settings
         renderStaticHashmarks();
+        
+        // Now render events after hashmarks are ready
+        renderAndPlaceEvents();
+        
+        // Initialize the next event countdown
+        updateNextEventCountdown();
         
         // Set up the cursor line after the page has fully loaded
         window.addEventListener('load', function() {
@@ -725,6 +808,15 @@
                 updateTimelineCursor(0);
             }, 200);
         });
+        
+        // Start in real-time mode by default after a short delay
+        setTimeout(function() {
+            startTimeline();
+            
+            // Force container sizing update after timeline starts
+            // This ensures everything is fully rendered before measuring
+            setTimeout(renderAndPlaceEvents, 100);
+        }, 500);
     });
     
     // Handle window resize to adjust cursor height
@@ -735,7 +827,13 @@
     });
       // Store events with unique IDs
     let allEvents = [];
-    let currentEventId = 0;    // Function to create an event with minute precision
+    let currentEventId = 0;
+    
+    // Viewport settings for timeline display
+    let viewportStartHour = 0;
+    let viewportEndHour = 24;
+    
+    // Function to create an event with minute precision
     function createEvent(name, startHour, startMinute, endHour, endMinute, section = "section1", color = "#2ecc40") {
         const id = currentEventId++;
         
@@ -800,24 +898,124 @@
         return false;
     }// Function to save events to local storage
     function saveEvents() {
-        localStorage.setItem('calendarEvents', JSON.stringify(allEvents));
-        localStorage.setItem('currentEventId', currentEventId.toString());
+        try {
+            // Save events and current ID
+            localStorage.setItem('calendarEvents', JSON.stringify(allEvents));
+            localStorage.setItem('currentEventId', currentEventId.toString());
+            
+            // Save viewport settings
+            localStorage.setItem('viewportStartHour', viewportStartHour.toString());
+            localStorage.setItem('viewportEndHour', viewportEndHour.toString());
+            
+            // Save timestamp for data freshness
+            localStorage.setItem('lastSaved', new Date().toISOString());
+            
+            // Visual feedback (optional)
+            showSaveIndicator();
+        } catch (error) {
+            console.warn('Failed to save events to localStorage:', error);
+            // Could show user notification here
+        }
     }
 
     // Function to load events from local storage
     function loadEvents() {
-        const savedEvents = localStorage.getItem('calendarEvents');
-        const savedEventId = localStorage.getItem('currentEventId');
-        
-        if (savedEvents) {
-            allEvents = JSON.parse(savedEvents);
+        try {
+            console.log('Loading events from localStorage...');
+            const savedEvents = localStorage.getItem('calendarEvents');
+            const savedEventId = localStorage.getItem('currentEventId');
+            const savedViewportStart = localStorage.getItem('viewportStartHour');
+            const savedViewportEnd = localStorage.getItem('viewportEndHour');
+            
+            // Clear existing events first to avoid duplicates
+            allEvents = [];
+            
+            // Load events
+            if (savedEvents && savedEvents !== 'null' && savedEvents !== '[]') {
+                const parsedEvents = JSON.parse(savedEvents);
+                if (Array.isArray(parsedEvents) && parsedEvents.length > 0) {
+                    allEvents = parsedEvents;
+                    console.log(`Loaded ${allEvents.length} events from storage`);
+                } else {
+                    console.log('No valid saved events found, will create test events');
+                }
+            } else {
+                console.log('No saved events found, will create test events');
+            }
+            
+            // Load event ID counter
+            if (savedEventId && savedEventId !== 'null') {
+                currentEventId = parseInt(savedEventId, 10);
+                console.log(`Loaded currentEventId: ${currentEventId}`);
+            }
+            
+            // Load viewport settings
+            if (savedViewportStart && savedViewportEnd) {
+                viewportStartHour = parseInt(savedViewportStart, 10);
+                viewportEndHour = parseInt(savedViewportEnd, 10);
+                console.log(`Loaded viewport: ${viewportStartHour}-${viewportEndHour}`);
+                
+                // Update UI inputs
+                const startInput = document.getElementById('viewportStartHour');
+                const endInput = document.getElementById('viewportEndHour');
+                if (startInput) startInput.value = viewportStartHour;
+                if (endInput) endInput.value = viewportEndHour;
+            }
+            
+            // Only create test events if no events were loaded
+            if (allEvents.length === 0) {
+                console.log('Creating test events...');
+                createTestEventsWithOverlaps();
+            }
+            
+            // Show when data was last saved
+            const lastSaved = localStorage.getItem('lastSaved');
+            if (lastSaved) {
+                console.log('Timeline data last saved:', new Date(lastSaved).toLocaleString());
+                updateDataStatus(`Last saved: ${new Date(lastSaved).toLocaleString()}`);
+            }
+            
+        } catch (error) {
+            console.warn('Failed to load events from localStorage:', error);
+            // Clear events array and fallback to default test events if loading fails
+            allEvents = [];
+            console.log('Loading failed, creating test events...');
+            createTestEventsWithOverlaps();
         }
         
-        if (savedEventId) {
-            currentEventId = parseInt(savedEventId, 10);
+        // Don't render events here - let the DOMContentLoaded handler control the render order
+        // renderAndPlaceEvents() will be called after hashmarks are rendered
+        // updateNextEventCountdown() will also be called later
+    }
+    
+    // Visual save indicator function
+    function showSaveIndicator() {
+        // Create or update save indicator
+        let indicator = document.getElementById('save-indicator');
+        if (!indicator) {
+            indicator = document.createElement('div');
+            indicator.id = 'save-indicator';
+            indicator.style.position = 'fixed';
+            indicator.style.top = '20px';
+            indicator.style.right = '20px';
+            indicator.style.background = '#2ecc40';
+            indicator.style.color = 'white';
+            indicator.style.padding = '8px 12px';
+            indicator.style.borderRadius = '4px';
+            indicator.style.fontSize = '0.8rem';
+            indicator.style.zIndex = '1000';
+            indicator.style.opacity = '0';
+            indicator.style.transition = 'opacity 0.3s ease';
+            document.body.appendChild(indicator);
         }
-          renderAndPlaceEvents();
-        updateNextEventCountdown(); // Update countdown after loading events
+        
+        indicator.textContent = 'Timeline Saved';
+        indicator.style.opacity = '1';
+        
+        // Hide after 2 seconds
+        setTimeout(() => {
+            indicator.style.opacity = '0';
+        }, 2000);
     }
     
     // Function to render/place all events
@@ -843,10 +1041,21 @@
             section.appendChild(blocksContainer);
         }
         blocksContainer.innerHTML = '';
-        const range = 24; // 24 hours
         
-        // Filter events by section
-        const sectionEvents = allEvents.filter(event => event.section === sectionId);
+        // Use viewport settings for range calculation
+        const viewportRange = viewportEndHour - viewportStartHour;
+        
+        // Filter events by section and viewport
+        const sectionEvents = allEvents.filter(event => {
+            if (event.section !== sectionId) return false;
+            
+            // Check if event overlaps with viewport
+            const eventStart = event.startHour + (event.startMinute / 60);
+            const eventEnd = event.endHour + (event.endMinute / 60);
+            
+            // Event is visible if it overlaps with the viewport range
+            return eventEnd > viewportStartHour && eventStart < viewportEndHour;
+        });
         
         // Sort events by start time and then by end time for more predictable layout
         sectionEvents.sort((a, b) => {
@@ -899,14 +1108,29 @@
                 if (event.color) {
                     block.style.borderLeftColor = event.color;
                     
-                    // Add subtle background tint based on the color
-                    const bgColor = event.color + '10'; // Add 10% opacity
-                    block.style.background = `linear-gradient(to right, ${bgColor} 0%, #f8fffa 100%)`;
+                    // Create a subtle gradient on top of white background
+                    const hex = event.color.replace('#', '');
+                    const r = parseInt(hex.substr(0, 2), 16);
+                    const g = parseInt(hex.substr(2, 2), 16);
+                    const b = parseInt(hex.substr(4, 2), 16);
+                    const lightColor = `rgba(${r}, ${g}, ${b}, 0.1)`;
+                    const veryLightColor = `rgba(${r}, ${g}, ${b}, 0.03)`;
+                    
+                    // Gradient from subtle color to almost transparent, on white base
+                    block.style.background = `linear-gradient(to right, ${lightColor} 0%, ${veryLightColor} 100%), white`;
+                    
+                    // Use dark text on white background
+                    block.style.color = '#2a2a2a';
+                    block.style.fontWeight = '500';
                 }
                 
-                // Calculate left and width as percent of 24 hours
-                const left = (event.start / range) * 100;
-                const width = ((event.end - event.start) / range) * 100;
+                // Calculate left and width as percent of viewport range
+                // Adjust event start/end relative to viewport
+                const eventStartInViewport = Math.max(event.start, viewportStartHour);
+                const eventEndInViewport = Math.min(event.end, viewportEndHour);
+                
+                const left = ((eventStartInViewport - viewportStartHour) / viewportRange) * 100;
+                const width = ((eventEndInViewport - eventStartInViewport) / viewportRange) * 100;
                 
                 // Calculate top position based on row assignment
                 const rowHeight = 50; // Height of each row in pixels
@@ -917,6 +1141,22 @@
                 block.style.width = width + '%';
                 block.style.top = topPosition + 'px';
                 block.style.height = (rowHeight - 2) + 'px'; // Slight gap between rows
+                
+                // Smart font sizing based on event width (simple and safe enhancement)
+                if (width < 3) {
+                    // Very narrow events: smaller font and abbreviated text
+                    block.style.fontSize = '0.7rem';
+                    block.textContent = event.name.split(' ')[0]; // Just first word
+                } else if (width < 6) {
+                    // Narrow events: smaller font
+                    block.style.fontSize = '0.75rem';
+                } else if (width < 10) {
+                    // Medium events: slightly smaller font
+                    block.style.fontSize = '0.85rem';
+                } else {
+                    // Wide events: normal font
+                    block.style.fontSize = '0.9rem';
+                }
                 
                 // Add click event to show popup
                 block.addEventListener('click', function(e) {
@@ -990,18 +1230,27 @@
                     eventItem.style.borderLeftColor = event.color;
                     eventItem.style.borderLeftWidth = '3px';
                     
-                    // Add subtle background tint based on the color
-                    const bgColor = event.color + '10'; // Add 10% opacity
-                    eventItem.style.background = `linear-gradient(to right, ${bgColor} 0%, #f7f8fa 100%)`;
-                }// Format times to display as GMT
-                const formatGMTTime = (hour, minute) => {
+                    // Create a subtle gradient on top of white background
+                    const hex = event.color.replace('#', '');
+                    const r = parseInt(hex.substr(0, 2), 16);
+                    const g = parseInt(hex.substr(2, 2), 16);
+                    const b = parseInt(hex.substr(4, 2), 16);
+                    const lightColor = `rgba(${r}, ${g}, ${b}, 0.1)`;
+                    const veryLightColor = `rgba(${r}, ${g}, ${b}, 0.03)`;
+                    
+                    // Gradient from subtle color to almost transparent, on white base
+                    eventItem.style.background = `linear-gradient(to right, ${lightColor} 0%, ${veryLightColor} 100%), white`;
+                    eventItem.style.color = '#2a2a2a';
+                    eventItem.style.fontWeight = '500';
+                }// Format times to display as CDT
+                const formatCDTTime = (hour, minute) => {
                     return `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
                 };
                 
                 eventItem.innerHTML = `
                     <div style="font-weight: 500;">${event.name}</div>
                     <div style="font-size: 0.8rem; color: #666;">
-                        ${formatGMTTime(event.startHour, event.startMinute)} - ${formatGMTTime(event.endHour, event.endMinute)} GMT (Section: ${event.section})
+                        ${formatCDTTime(event.startHour, event.startMinute)} - ${formatCDTTime(event.endHour, event.endMinute)} CDT (Section: ${event.section})
                     </div>
                 `;
                 
@@ -1013,12 +1262,6 @@
             });
         }    }
     
-    // Initialize with a default event if none exist
-    if (allEvents.length === 0) {
-        // Create multiple events with some overlaps to demonstrate the feature
-        createTestEventsWithOverlaps();
-    }
-
     // Make sure event blocks containers are created for both sections
     function ensureEventBlocksContainers() {
         const sections = ['section1', 'section2', 'section3'];
@@ -1041,7 +1284,7 @@
     // Call this on initialization
     ensureEventBlocksContainers();
 
-    // Timeline tracer logic with real GMT time
+    // Timeline tracer logic with real CDT time
     let timelineInterval = null;
     let isRealTime = true; // Default to real-time mode
     let timelineStart = null;
@@ -1050,19 +1293,40 @@
     
     function getCurrentTimePercent() {
         const date = new Date();
-        const hours = date.getUTCHours();
-        const minutes = date.getUTCMinutes();
-        const seconds = date.getUTCSeconds();
+        const cdtTimeOptions = {
+            timeZone: 'America/Chicago',
+            hour: 'numeric',
+            minute: 'numeric',
+            second: 'numeric',
+            hour12: false
+        };
+        const cdtTime = date.toLocaleString('en-US', cdtTimeOptions);
+        const [hours, minutes, seconds] = cdtTime.split(':').map(Number);
         
-        // Calculate the percentage through the day (0-100) based on GMT/UTC time
-        const secondsSinceMidnight = hours * 3600 + minutes * 60 + seconds;
-        const percentOfDay = (secondsSinceMidnight / 86400) * 100;
+        // Calculate current time as decimal hours
+        const currentDecimalTime = hours + (minutes / 60) + (seconds / 3600);
         
-        return percentOfDay;
+        // If current time is outside viewport, return null to hide cursor
+        if (currentDecimalTime < viewportStartHour || currentDecimalTime >= viewportEndHour) {
+            return null;
+        }
+        
+        // Calculate percentage within the viewport range
+        const percentInViewport = ((currentDecimalTime - viewportStartHour) / (viewportEndHour - viewportStartHour)) * 100;
+        
+        return Math.max(0, Math.min(100, percentInViewport));
     }    function updateTimelineCursor(percent) {
         const hashOuter = document.querySelector('.timeline-hashmarks-outer');
         const cursor = document.getElementById('timeline-cursor');
         if (!hashOuter || !cursor) return;
+        
+        // Hide cursor if percent is null (outside viewport)
+        if (percent === null) {
+            cursor.style.display = 'none';
+            return;
+        } else {
+            cursor.style.display = 'block';
+        }
         
         // Clamp percent between 0 and 100
         const clampedPercent = Math.max(0, Math.min(percent, 100));
@@ -1104,23 +1368,17 @@
             timePanel.id = 'time-panel';
             timePanel.className = 'time-panel';
             
-            // Create GMT date display
+            // Create CDT date display
             const gmtDateDisplay = document.createElement('div');
             gmtDateDisplay.id = 'gmt-date-display';
             gmtDateDisplay.className = 'time-panel-item';
             timePanel.appendChild(gmtDateDisplay);
             
-            // Create GMT time display
+            // Create CDT time display
             const gmtDisplay = document.createElement('div');
             gmtDisplay.id = 'gmt-time-display';
             gmtDisplay.className = 'time-panel-item';
             timePanel.appendChild(gmtDisplay);
-            
-            // Create local time display
-            const localDisplay = document.createElement('div');
-            localDisplay.id = 'local-time-display';
-            localDisplay.className = 'time-panel-item';
-            timePanel.appendChild(localDisplay);
               // Add to the timeline - make sure we append it to the body where it will be visible
             const timelineContainer = document.querySelector('.timeline-bar.timeline-hashmarks');
             if (timelineContainer) {
@@ -1133,20 +1391,20 @@
         
         const date = new Date();
         
-        // Format the date for GMT display
-        const utcDateOptions = {
+        // Format the date for CDT display
+        const cdtDateOptions = {
             year: 'numeric',
             month: 'short',
             day: 'numeric',
-            timeZone: 'UTC'
+            timeZone: 'America/Chicago'
         };
         
-        // Format the current time with UTC/GMT indicator
-        const utcOptions = {
+        // Format the current time with CDT indicator
+        const cdtOptions = {
             hour: '2-digit', 
             minute: '2-digit',
             second: '2-digit',
-            timeZone: 'UTC',
+            timeZone: 'America/Chicago',
             hour12: false
         };
         
@@ -1154,23 +1412,20 @@
             hour: '2-digit', 
             minute: '2-digit',
             second: '2-digit',
+            timeZone: 'America/Chicago',
             hour12: false
         };
         
-        const utcDate = date.toLocaleDateString('en-US', utcDateOptions);
-        const utcTime = date.toLocaleTimeString('en-US', utcOptions);
-        const localTime = date.toLocaleTimeString('en-US', localOptions);
+        const cdtDate = date.toLocaleDateString('en-US', cdtDateOptions);
+        const cdtTime = date.toLocaleTimeString('en-US', cdtOptions);
+        const cdtTime2 = date.toLocaleTimeString('en-US', localOptions);
         
-        // Update the GMT date display
+        // Update the CDT date display
         const gmtDateDisplay = document.getElementById('gmt-date-display');
-        gmtDateDisplay.innerHTML = `<span class="time-panel-label">GMT Date:</span> ${utcDate}`;
-          // Update the GMT time display
+        gmtDateDisplay.innerHTML = `<span class="time-panel-label">CDT Date:</span> ${cdtDate}`;
+          // Update the CDT time display
         const gmtDisplay = document.getElementById('gmt-time-display');
-        gmtDisplay.innerHTML = `<span class="time-panel-label">GMT Time:</span> ${utcTime}`;
-        
-        // Update the local time display
-        const localDisplay = document.getElementById('local-time-display');
-        localDisplay.innerHTML = `<span class="time-panel-label">Local Time:</span> ${localTime}`;
+        gmtDisplay.innerHTML = `<span class="time-panel-label">CDT Time:</span> ${cdtTime}`;
     }
     
     function startTimeline() {
@@ -1192,8 +1447,8 @@
         
         // Update mode indicator if it exists
         const modeIndicator = document.getElementById('modeIndicator');
-        if (modeIndicator) {tgyfdr
-            modeIndicator.textContent = 'Real-Time Mode (GMT)';
+        if (modeIndicator) {
+            modeIndicator.textContent = 'Real-Time Mode (CDT)';
         }
     }
       function startAnimation() {
@@ -1298,30 +1553,6 @@
         if (!isHidden) {
             showSection(null);
         }    };
-    
-    // Make sure cursor and events are initialized properly when page loads
-    document.addEventListener('DOMContentLoaded', function() {
-        // Render the hashline
-        renderStaticHashmarks();
-        
-        // Ensure event blocks containers exist for both sections
-        ensureEventBlocksContainers();
-        
-        // Load saved events from local storage
-        loadEvents();
-        
-        // Initialize the next event countdown
-        updateNextEventCountdown();
-        
-        // Start in real-time mode by default after a short delay
-        setTimeout(function() {
-            startTimeline();
-            
-            // Force container sizing update after timeline starts
-            // This ensures everything is fully rendered before measuring
-            setTimeout(renderAndPlaceEvents, 100);
-        }, 500);
-    });
     
     // Event Form Management Functions
     function showSection(sectionId) {
@@ -1496,6 +1727,158 @@
     document.getElementById('cancelEditBtn').onclick = function() {
         showSection(null);    };
     
+    // Time adjustment functions
+    function adjustTimeForSection(hours, minutes, sectionId) {
+        let adjustedEvents = 0;
+        
+        // Filter events by section and adjust their times
+        allEvents.forEach(event => {
+            if (event.section === sectionId) {
+                // Calculate new start time
+                let newStartMinutes = event.startMinute + minutes;
+                let newStartHours = event.startHour + hours;
+                
+                // Handle minute overflow/underflow
+                if (newStartMinutes >= 60) {
+                    newStartHours += Math.floor(newStartMinutes / 60);
+                    newStartMinutes = newStartMinutes % 60;
+                } else if (newStartMinutes < 0) {
+                    newStartHours += Math.floor(newStartMinutes / 60);
+                    newStartMinutes = ((newStartMinutes % 60) + 60) % 60;
+                }
+                
+                // Handle hour overflow/underflow (wrap around 24-hour clock)
+                newStartHours = ((newStartHours % 24) + 24) % 24;
+                
+                // Calculate new end time
+                let newEndMinutes = event.endMinute + minutes;
+                let newEndHours = event.endHour + hours;
+                
+                // Handle minute overflow/underflow
+                if (newEndMinutes >= 60) {
+                    newEndHours += Math.floor(newEndMinutes / 60);
+                    newEndMinutes = newEndMinutes % 60;
+                } else if (newEndMinutes < 0) {
+                    newEndHours += Math.floor(newEndMinutes / 60);
+                    newEndMinutes = ((newEndMinutes % 60) + 60) % 60;
+                }
+                
+                // Handle hour overflow/underflow (wrap around 24-hour clock)
+                newEndHours = ((newEndHours % 24) + 24) % 24;
+                
+                // Update the event
+                event.startHour = newStartHours;
+                event.startMinute = newStartMinutes;
+                event.endHour = newEndHours;
+                event.endMinute = newEndMinutes;
+                
+                // Recalculate start and end decimal values
+                event.start = event.startHour + (event.startMinute / 60);
+                event.end = event.endHour + (event.endMinute / 60);
+                
+                adjustedEvents++;
+            }
+        });
+        
+        return adjustedEvents;
+    }
+    
+    function handleApplyTimeAdjustment() {
+        const hours = parseInt(document.getElementById('adjustmentHours').value) || 0;
+        const minutes = parseInt(document.getElementById('adjustmentMinutes').value) || 0;
+        const sectionId = document.getElementById('adjustmentSection').value;
+        
+        if (hours === 0 && minutes === 0) {
+            alert('Please enter a time adjustment (hours and/or minutes).');
+            return;
+        }
+        
+        const sectionNames = {
+            'section1': 'Mission (Section 1)',
+            'section2': 'SER (Section 2)', 
+            'section3': 'SMOR (Section 3)'
+        };
+        
+        const sectionName = sectionNames[sectionId];
+        const timeStr = `${hours >= 0 ? '+' : ''}${hours}h ${minutes >= 0 ? '+' : ''}${minutes}m`;
+        
+        if (confirm(`Apply time adjustment of ${timeStr} to all events in ${sectionName}?`)) {
+            const adjustedCount = adjustTimeForSection(hours, minutes, sectionId);
+            
+            // Save the updated events and refresh the display
+            saveEvents();
+            renderAndPlaceEvents();
+            updateNextEventCountdown();
+            
+            alert(`Successfully adjusted ${adjustedCount} events in ${sectionName} by ${timeStr}.`);
+            
+            // Clear the form
+            document.getElementById('adjustmentHours').value = '';
+            document.getElementById('adjustmentMinutes').value = '';
+        }
+    }
+    
+    function handleClearTimeAdjustment() {
+        document.getElementById('adjustmentHours').value = '';
+        document.getElementById('adjustmentMinutes').value = '';
+    }
+    
+    // Add event listeners for time adjustment
+    document.getElementById('applyTimeAdjustmentBtn').onclick = handleApplyTimeAdjustment;
+    document.getElementById('clearAdjustmentBtn').onclick = handleClearTimeAdjustment;
+    
+    // Viewport control functions
+    function handleApplyViewport() {
+        const startHour = parseInt(document.getElementById('viewportStartHour').value);
+        const endHour = parseInt(document.getElementById('viewportEndHour').value);
+        
+        if (startHour >= endHour) {
+            alert('Start hour must be less than end hour.');
+            return;
+        }
+        
+        if (startHour < 0 || startHour > 23 || endHour < 1 || endHour > 24) {
+            alert('Start hour must be 0-23 and end hour must be 1-24.');
+            return;
+        }
+        
+        // Update viewport settings
+        viewportStartHour = startHour;
+        viewportEndHour = endHour;
+        
+        // Save viewport settings to localStorage
+        saveEvents();
+        
+        // Re-render timeline with new viewport
+        renderStaticHashmarks();
+        renderAndPlaceEvents();
+        
+        alert(`Timeline viewport set to ${startHour}:00 - ${endHour}:00. Events outside this range are hidden but timers remain accurate.`);
+    }
+    
+    function handleResetViewport() {
+        // Reset to full 24-hour view
+        viewportStartHour = 0;
+        viewportEndHour = 24;
+        
+        // Save viewport settings to localStorage
+        saveEvents();
+        
+        // Update form inputs
+        document.getElementById('viewportStartHour').value = 0;
+        document.getElementById('viewportEndHour').value = 24;
+        
+        // Re-render timeline
+        renderStaticHashmarks();
+        renderAndPlaceEvents();
+        
+        alert('Timeline viewport reset to full 24-hour view (0:00 - 24:00).');
+    }
+    
+    // Add event listeners for viewport controls
+    document.getElementById('applyViewportBtn').onclick = handleApplyViewport;
+    document.getElementById('resetViewportBtn').onclick = handleResetViewport;
+    
     // Function to update the countdown to the next event
     function updateNextEventCountdown() {
         // Update countdown for section 1
@@ -1513,14 +1896,20 @@
         const countdownElement = document.getElementById(elementId);
         if (!countdownElement) return;
         
-        // Get current GMT time
+        // Get current CDT time
         const now = new Date();
-        const currentGMTHours = now.getUTCHours();
-        const currentGMTMinutes = now.getUTCMinutes();
-        const currentGMTSeconds = now.getUTCSeconds();
+        const cdtTimeOptions = {
+            timeZone: 'America/Chicago',
+            hour: 'numeric',
+            minute: 'numeric',
+            second: 'numeric',
+            hour12: false
+        };
+        const cdtTime = now.toLocaleString('en-US', cdtTimeOptions);
+        const [currentCDTHours, currentCDTMinutes, currentCDTSeconds] = cdtTime.split(':').map(Number);
         
         // Convert current time to decimal hours for comparison
-        const currentTimeDecimal = currentGMTHours + (currentGMTMinutes / 60) + (currentGMTSeconds / 3600);
+        const currentTimeDecimal = currentCDTHours + (currentCDTMinutes / 60) + (currentCDTSeconds / 3600);
         
         // Find the next upcoming event in this section
         let nextEvent = null;        let minTimeDifference = Infinity;
@@ -1594,7 +1983,7 @@
         
         // Format the times nicely
         const formatTime = (hour, minute) => {
-            return `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')} GMT`;
+            return `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')} CDT`;
         };
           // Set popup content
         popup.innerHTML = `
@@ -1676,25 +2065,214 @@
         currentEventId = 0;
         
         // Create events for section 1 with various overlaps8
-        createEvent('TBD', 0, 0, 4, 0, 'section1', '#2ecc40');
-        createEvent('Lunar Flyby', 4, 0, 10, 0, 'section1', '#3498db');
-        createEvent('TBD', 10, 0, 14, 0, 'section1', '#2ecc40');
-        createEvent('Crew Sleep', 14, 0, 22, 0, 'section1', '#9b59b6');
-        createEvent('Downlink', 16, 0, 17, 30, 'section1', '#2ecc40');
-          // Create events for section 2
-        createEvent('Flyby Documentation', 0, 0, 14, 0, 'section2', '#e74c3c');
-        createEvent('Kickoff Meeting', 0, 5, 2, 0, 'section2', '#3498db');
-        createEvent('Deployment', 12, 0, 14, 0, 'section2', '#3498db');
-        createEvent('Downlink I', 19, 0, 23, 0, 'section2', '#9b59b6');
-        createEvent('Handover', 19, 30, 21, 30, 'section2', '#3498db');
+        createEvent('Whole Moon 1/4', 9, 15, 9, 20, 'section1', '#2ecc40');
+        createEvent('Grimaldi Crater', 9, 20, 9, 25, 'section1', '#3498db');
+        createEvent('Seleucus Crater', 9, 25, 9, 30, 'section1', '#2ecc40');
+        createEvent('Mare Ingenii', 9, 30, 9, 35, 'section1', '#9b59b6');
+        createEvent('Glushko Crater', 9, 35, 9, 40, 'section1', '#2ecc40');
+        createEvent('Sundman V Crater 1/2', 9, 40, 9, 45, 'section1', '#2ecc40');
+        createEvent('Orientale Annular Ring', 9, 45, 9, 50, 'section1', '#2ecc40');
+        createEvent('Ohm Crater', 9, 50, 9, 55, 'section1', '#2ecc40');
+        createEvent('Whole Illuminated Moon 2/4', 9, 55, 10, 0, 'section1', '#2ecc40');
+        createEvent('Lacus Luxuruae Region', 10, 0, 10, 5, 'section1', '#2ecc40');
+        createEvent('Terminator 1/2', 10, 5, 10, 10, 'section1', '#2ecc40');
+        createEvent('Leibnitz Crater 1/3', 10, 10, 10, 15, 'section1', '#2ecc40');
+        createEvent('Whole Moon With Earthset', 10, 15, 10, 20, 'section1', '#2ecc40');
+        createEvent('Sundman V Crater 2/2', 10, 20, 10, 25, 'section1', '#2ecc40');
+        createEvent('Apollo Basin', 10, 25, 10, 30, 'section1', '#2ecc40');
+        createEvent('Oppenheimer Crater', 10, 30, 10, 35, 'section1', '#2ecc40');
+        createEvent('Poincare Basin Region', 10, 35, 10, 40, 'section1', '#2ecc40');
+        createEvent('Bose Bhabha Crater Region', 10, 40, 10, 45, 'section1', '#2ecc40');
+        createEvent('Buys-Ballot Crater', 10, 45, 10, 50, 'section1', '#2ecc40');
+        createEvent('Jackson Crater', 10, 50, 10, 55, 'section1', '#2ecc40');
+        createEvent('Earthrise', 10, 57, 11, 0, 'section1', '#2ecc40');
+        createEvent('Leibnitz Crater 2/3', 11, 0, 11, 5, 'section1', '#2ecc40');
+        createEvent('Whole Moon 3/4', 11, 5, 11, 10, 'section1', '#2ecc40');
+        createEvent('Terminator 2/2', 11, 10, 11, 15, 'section1', '#2ecc40');
+        createEvent('Impact Flashes', 11, 15, 11, 20, 'section1', '#2ecc40');
+        createEvent('Deep Space - Mars', 11, 20, 11, 25, 'section1', '#2ecc40');
+        createEvent('Dewar Crater Region', 11, 25, 11, 30, 'section1', '#2ecc40');
+        createEvent('Korolev', 11, 30, 11, 35, 'section1', '#2ecc40');
+        createEvent('Lacus Luxuriae Region', 11, 35, 11, 40, 'section1', '#2ecc40');
+        createEvent('Mare Ingenii and Swirls 2/2', 11, 40, 11, 45, 'section1', '#2ecc40');
+        createEvent('Buys-Ballot Crater 2/2', 11, 45, 11, 50, 'section1', '#2ecc40');
+        createEvent('Aitken Crater', 11, 50, 11, 55, 'section1', '#2ecc40');
+        createEvent('Whole Illuminated Moon 4/4', 11, 55, 12, 0, 'section1', '#2ecc40');
+        createEvent('Northern FHT Dark Area', 12, 0, 12, 5, 'section1', '#2ecc40');
+        createEvent('Leibnitz Crater 3/3', 12, 5, 12, 10, 'section1', '#2ecc40');
+        createEvent('Jackson Crater 2/2', 12, 10, 12, 15, 'section1', '#2ecc40');
+          
         
+        // Create events for section 2 SER TAB
+        createEvent('Flyby Shift', 8, 0, 16, 0, 'section2', '#e74c3c');
+        createEvent('On Consoles', 8, 1, 8, 30, 'section2', '#3498db');
+        createEvent('Go To Run', 8, 30, 8, 35, 'section2', '#3498db');
+        createEvent('SER Briefing', 8, 35, 8, 45, 'section2', '#9b59b6');
+        createEvent('Pre Brief', 8, 45, 9, 15, 'section2', '#3498db');
+        createEvent('Nom Ops', 9, 15, 15, 30, 'section2', '#3498db');
+        createEvent('FCT Debrief', 15, 30, 16, 0, 'section2', '#3498db');
+        createEvent('SER Debrief', 16, 0, 17, 0, 'section2', '#3498db');
+
         // Create events for section 3
-        createEvent('Downlink I', 16, 0, 22, 0, 'section3', '#2ecc40');
-        createEvent('Kickoff Meeting', 16, 5, 18, 0, 'section3', '#3498db');
-        createEvent('Handover', 19, 30, 21, 30, 'section3', '#3498db');
+        createEvent('Downlink I', 11, 36, 17, 36, 'section3', '#2ecc40');
+        createEvent('Kickoff Meeting', 11, 41, 13, 36, 'section3', '#3498db');
+        createEvent('Handover', 15, 6, 17, 6, 'section3', '#3498db');
         
         updateNextEventCountdown();
     }
+    
+    // Data Management Functions
+    function exportTimelineData() {
+        try {
+            const exportData = {
+                events: allEvents,
+                viewportSettings: {
+                    startHour: viewportStartHour,
+                    endHour: viewportEndHour
+                },
+                metadata: {
+                    exportDate: new Date().toISOString(),
+                    version: '1.0',
+                    eventCount: allEvents.length
+                }
+            };
+            
+            const dataStr = JSON.stringify(exportData, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            
+            // Create download link
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(dataBlob);
+            link.download = `timeline-data-${new Date().toISOString().split('T')[0]}.json`;
+            
+            // Trigger download
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            updateDataStatus('Data exported successfully');
+        } catch (error) {
+            console.error('Export failed:', error);
+            alert('Failed to export data. Please try again.');
+        }
+    }
+    
+    function importTimelineData() {
+        document.getElementById('importFileInput').click();
+    }
+    
+    function handleFileImport(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                const importData = JSON.parse(e.target.result);
+                
+                // Validate import data structure
+                if (!importData.events || !Array.isArray(importData.events)) {
+                    throw new Error('Invalid data format: missing events array');
+                }
+                
+                // Confirm import
+                const confirmMsg = `Import ${importData.events.length} events? This will replace all current data.`;
+                if (!confirm(confirmMsg)) return;
+                
+                // Import events
+                allEvents = importData.events;
+                
+                // Import viewport settings if available
+                if (importData.viewportSettings) {
+                    viewportStartHour = importData.viewportSettings.startHour || 0;
+                    viewportEndHour = importData.viewportSettings.endHour || 24;
+                    
+                    // Update UI
+                    document.getElementById('viewportStartHour').value = viewportStartHour;
+                    document.getElementById('viewportEndHour').value = viewportEndHour;
+                }
+                
+                // Update event ID counter
+                currentEventId = Math.max(...allEvents.map(e => e.id), 0) + 1;
+                
+                // Save to localStorage
+                saveEvents();
+                
+                // Re-render everything
+                renderStaticHashmarks();
+                renderAndPlaceEvents();
+                updateNextEventCountdown();
+                
+                updateDataStatus(`Imported ${allEvents.length} events successfully`);
+                
+            } catch (error) {
+                console.error('Import failed:', error);
+                alert('Failed to import data: ' + error.message);
+            }
+        };
+        
+        reader.readAsText(file);
+        // Clear the input for next use
+        event.target.value = '';
+    }
+    
+    function clearAllData() {
+        const confirmMsg = 'Are you sure you want to clear ALL timeline data? This cannot be undone.';
+        if (!confirm(confirmMsg)) return;
+        
+        try {
+            // Clear localStorage
+            localStorage.removeItem('calendarEvents');
+            localStorage.removeItem('currentEventId');
+            localStorage.removeItem('viewportStartHour');
+            localStorage.removeItem('viewportEndHour');
+            localStorage.removeItem('lastSaved');
+            
+            // Reset application state
+            allEvents = [];
+            currentEventId = 1;
+            viewportStartHour = 0;
+            viewportEndHour = 24;
+            
+            // Reset UI
+            document.getElementById('viewportStartHour').value = 0;
+            document.getElementById('viewportEndHour').value = 24;
+            
+            // Create default test events
+            createTestEventsWithOverlaps();
+            
+            // Re-render
+            renderStaticHashmarks();
+            renderAndPlaceEvents();
+            updateNextEventCountdown();
+            
+            updateDataStatus('All data cleared. Default events restored.');
+            
+        } catch (error) {
+            console.error('Clear data failed:', error);
+            alert('Failed to clear data. Please try again.');
+        }
+    }
+    
+    function updateDataStatus(message) {
+        const statusEl = document.getElementById('dataStatus');
+        if (statusEl) {
+            statusEl.textContent = message;
+            statusEl.style.color = '#2ecc40';
+            
+            // Reset to default message after 5 seconds
+            setTimeout(() => {
+                statusEl.textContent = 'Data is automatically saved to browser storage';
+                statusEl.style.color = '#666';
+            }, 5000);
+        }
+    }
+    
+    // Add event listeners for data management
+    document.getElementById('exportDataBtn').onclick = exportTimelineData;
+    document.getElementById('importDataBtn').onclick = importTimelineData;
+    document.getElementById('clearDataBtn').onclick = clearAllData;
+    document.getElementById('importFileInput').addEventListener('change', handleFileImport);
     </script>
 </body>
 </html>
