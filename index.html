@@ -2064,59 +2064,29 @@
         allEvents = [];
         currentEventId = 0;
         
-        // Create events for section 1 with various overlaps8
-        createEvent('Whole Moon 1/4', 9, 15, 9, 20, 'section1', '#2ecc40');
-        createEvent('Grimaldi Crater', 9, 20, 9, 25, 'section1', '#3498db');
-        createEvent('Seleucus Crater', 9, 25, 9, 30, 'section1', '#2ecc40');
-        createEvent('Mare Ingenii', 9, 30, 9, 35, 'section1', '#9b59b6');
-        createEvent('Glushko Crater', 9, 35, 9, 40, 'section1', '#2ecc40');
-        createEvent('Sundman V Crater 1/2', 9, 40, 9, 45, 'section1', '#2ecc40');
-        createEvent('Orientale Annular Ring', 9, 45, 9, 50, 'section1', '#2ecc40');
-        createEvent('Ohm Crater', 9, 50, 9, 55, 'section1', '#2ecc40');
-        createEvent('Whole Illuminated Moon 2/4', 9, 55, 10, 0, 'section1', '#2ecc40');
-        createEvent('Lacus Luxuruae Region', 10, 0, 10, 5, 'section1', '#2ecc40');
-        createEvent('Terminator 1/2', 10, 5, 10, 10, 'section1', '#2ecc40');
-        createEvent('Leibnitz Crater 1/3', 10, 10, 10, 15, 'section1', '#2ecc40');
-        createEvent('Whole Moon With Earthset', 10, 15, 10, 20, 'section1', '#2ecc40');
-        createEvent('Sundman V Crater 2/2', 10, 20, 10, 25, 'section1', '#2ecc40');
-        createEvent('Apollo Basin', 10, 25, 10, 30, 'section1', '#2ecc40');
-        createEvent('Oppenheimer Crater', 10, 30, 10, 35, 'section1', '#2ecc40');
-        createEvent('Poincare Basin Region', 10, 35, 10, 40, 'section1', '#2ecc40');
-        createEvent('Bose Bhabha Crater Region', 10, 40, 10, 45, 'section1', '#2ecc40');
-        createEvent('Buys-Ballot Crater', 10, 45, 10, 50, 'section1', '#2ecc40');
-        createEvent('Jackson Crater', 10, 50, 10, 55, 'section1', '#2ecc40');
-        createEvent('Earthrise', 10, 57, 11, 0, 'section1', '#2ecc40');
-        createEvent('Leibnitz Crater 2/3', 11, 0, 11, 5, 'section1', '#2ecc40');
-        createEvent('Whole Moon 3/4', 11, 5, 11, 10, 'section1', '#2ecc40');
-        createEvent('Terminator 2/2', 11, 10, 11, 15, 'section1', '#2ecc40');
-        createEvent('Impact Flashes', 11, 15, 11, 20, 'section1', '#2ecc40');
-        createEvent('Deep Space - Mars', 11, 20, 11, 25, 'section1', '#2ecc40');
-        createEvent('Dewar Crater Region', 11, 25, 11, 30, 'section1', '#2ecc40');
-        createEvent('Korolev', 11, 30, 11, 35, 'section1', '#2ecc40');
-        createEvent('Lacus Luxuriae Region', 11, 35, 11, 40, 'section1', '#2ecc40');
-        createEvent('Mare Ingenii and Swirls 2/2', 11, 40, 11, 45, 'section1', '#2ecc40');
-        createEvent('Buys-Ballot Crater 2/2', 11, 45, 11, 50, 'section1', '#2ecc40');
-        createEvent('Aitken Crater', 11, 50, 11, 55, 'section1', '#2ecc40');
-        createEvent('Whole Illuminated Moon 4/4', 11, 55, 12, 0, 'section1', '#2ecc40');
-        createEvent('Northern FHT Dark Area', 12, 0, 12, 5, 'section1', '#2ecc40');
-        createEvent('Leibnitz Crater 3/3', 12, 5, 12, 10, 'section1', '#2ecc40');
-        createEvent('Jackson Crater 2/2', 12, 10, 12, 15, 'section1', '#2ecc40');
-          
-        
+        // Create events for section 1 with various overlaps
+        createEvent('J.H. & R.W.', 9, 0, 9, 20, 'section1', '#f39c12');
+        createEvent('R.W. & J.H.', 9, 20, 9, 45, 'section1', '#f39c12');
+        createEvent('UP-LOS', 9, 12, 9, 45, 'section1', '#9b59b6');
+        createEvent('UP-LOS', 10, 12, 10, 54, 'section1', '#9b59b6');
+        createEvent('DWN-LOS', 10, 12, 10, 54, 'section1', '#9b59b6');
+        createEvent('V.G. & C.K.', 10, 0, 10, 20, 'section1', '#3498db');
+        createEvent('C.K. & V.G.', 10, 20, 10, 45, 'section1', '#3498db');
+        createEvent('J.H. & R.W.', 11, 0, 11, 20, 'section1', '#f39c12');
+        createEvent('R.W. & J.H.', 11, 20, 11, 45, 'section1', '#f39c12');
+
         // Create events for section 2 SER TAB
-        createEvent('Flyby Shift', 8, 0, 16, 0, 'section2', '#e74c3c');
-        createEvent('On Consoles', 8, 1, 8, 30, 'section2', '#3498db');
-        createEvent('Go To Run', 8, 30, 8, 35, 'section2', '#3498db');
-        createEvent('SER Briefing', 8, 35, 8, 45, 'section2', '#9b59b6');
-        createEvent('Pre Brief', 8, 45, 9, 15, 'section2', '#3498db');
-        createEvent('Nom Ops', 9, 15, 15, 30, 'section2', '#3498db');
-        createEvent('FCT Debrief', 15, 30, 16, 0, 'section2', '#3498db');
-        createEvent('SER Debrief', 16, 0, 17, 0, 'section2', '#3498db');
+        createEvent('Flyby', 8, 0, 13, 30, 'section2', '#2ecc40');
+        createEvent('Pre Brief', 8, 1, 8, 30, 'section2', '#3498db');
+        createEvent('DP', 9, 50, 10, 0, 'section2', '#e74c3c');
+        createEvent('DP', 10, 50, 11, 0, 'section2', '#e74c3c');
+        createEvent('DP', 11, 50, 12, 0, 'section2', '#e74c3c');
+        createEvent('Shift Debrief', 12, 30, 13, 0, 'section2', '#9b59b6');
+        createEvent('Handover', 13, 0, 13, 30, 'section2', '#3498db');
 
         // Create events for section 3
-        createEvent('Downlink I', 11, 36, 17, 36, 'section3', '#2ecc40');
-        createEvent('Kickoff Meeting', 11, 41, 13, 36, 'section3', '#3498db');
-        createEvent('Handover', 15, 6, 17, 6, 'section3', '#3498db');
+        createEvent('Downlink I', 13, 0, 17, 36, 'section3', '#2ecc40');
+        createEvent('Handover', 13, 1, 13, 30, 'section3', '#3498db');
         
         updateNextEventCountdown();
     }
