@@ -155,6 +155,21 @@
             transform: translateY(-2px);
         }
         
+        /* Event text label styles */
+        .event-text-label {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            line-height: 1.2;
+            user-select: none;
+            transition: opacity 0.2s ease;
+        }
+        
+        /* Event connector line styles */
+        .event-connector-line {
+            border-radius: 1px;
+            opacity: 0.7;
+            transition: opacity 0.2s ease;
+        }
+        
         /* Event popup styles */
         .event-popup {
             position: absolute;
@@ -603,7 +618,15 @@
                             <div class="color-box" data-color="#9b59b6" style="background: #9b59b6; width: 20px; height: 20px; border-radius: 4px; cursor: pointer;"></div>
                         </div>
                     </div>
-                </div>                <div style="display: flex; gap: 8px; margin-top: 8px;">
+                </div>
+                <div class="form-row">
+                    <label for="eventTextBottom">Text Position</label>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <input type="checkbox" id="eventTextBottom" style="margin: 0;">
+                        <label for="eventTextBottom" style="font-size: 0.9rem; margin: 0;">Show text below event</label>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 8px; margin-top: 8px;">
                     <button id="saveEventBtn">Save Event</button>
                     <button id="cancelEventBtn" class="secondary">Cancel</button>
                 </div>
@@ -657,6 +680,13 @@
                         <option value="section2">Section 2</option>
                         <option value="section3">Section 3</option>
                     </select>
+                </div>
+                <div class="form-row">
+                    <label for="editEventTextBottom">Text Position</label>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <input type="checkbox" id="editEventTextBottom" style="margin: 0;">
+                        <label for="editEventTextBottom" style="font-size: 0.9rem; margin: 0;">Show text below event</label>
+                    </div>
                 </div>
                 <div style="display: flex; gap: 8px; margin-top: 8px;">
                     <button id="updateEventBtn">Update</button>
@@ -834,7 +864,7 @@
     let viewportEndHour = 24;
     
     // Function to create an event with minute precision
-    function createEvent(name, startHour, startMinute, endHour, endMinute, section = "section1", color = "#2ecc40") {
+    function createEvent(name, startHour, startMinute, endHour, endMinute, section = "section1", color = "#2ecc40", bottom = false) {
         const id = currentEventId++;
         
         // Convert to decimal hours for positioning (e.g., 1:30 becomes 1.5)
@@ -851,7 +881,8 @@
             start, // decimal hours for positioning
             end,   // decimal hours for positioning
             section,
-            color  // Store the event color
+            color,  // Store the event color
+            bottom  // Store whether text should appear below the box
         };
         
         allEvents.push(event);
@@ -965,7 +996,7 @@
             // Only create test events if no events were loaded
             if (allEvents.length === 0) {
                 console.log('Creating test events...');
-                createTestEventsWithOverlaps();
+                createTestEvents();
             }
             
             // Show when data was last saved
@@ -980,7 +1011,7 @@
             // Clear events array and fallback to default test events if loading fails
             allEvents = [];
             console.log('Loading failed, creating test events...');
-            createTestEventsWithOverlaps();
+            createTestEvents();
         }
         
         // Don't render events here - let the DOMContentLoaded handler control the render order
@@ -1057,51 +1088,20 @@
             return eventEnd > viewportStartHour && eventStart < viewportEndHour;
         });
         
-        // Sort events by start time and then by end time for more predictable layout
+        // Sort events by start time for consistent display
         sectionEvents.sort((a, b) => {
             if (a.start !== b.start) return a.start - b.start;
             return a.end - b.end;
         });
         
-        // Track row assignments for overlapping events
-        const rows = [];
-        let maxRow = 0;
-        
-        // Function to check if an event overlaps with events in a specific row
-        function eventOverlapsRow(event, rowEvents) {
-            for (let existingEvent of rowEvents) {
-                // Check for any overlap
-                if (!(event.end <= existingEvent.start || event.start >= existingEvent.end)) {
-                    return true;
-                }
-            }
-            return false;
-        }
-        
-        // Assign each event to a row
+        // Render each event on a single row
         sectionEvents.forEach(event => {
             if (event.end > event.start) {
-                // Find the first row where this event doesn't overlap
-                let rowIndex = 0;
-                while (rows[rowIndex] && eventOverlapsRow(event, rows[rowIndex])) {
-                    rowIndex++;
-                }
                 
-                // Create the row array if it doesn't exist
-                if (!rows[rowIndex]) {
-                    rows[rowIndex] = [];
-                }
-                
-                // Add event to the row
-                rows[rowIndex].push(event);
-                
-                // Update max row for container height
-                maxRow = Math.max(maxRow, rowIndex);
-                
-                // Create the event block
+                // Create the event block (no text content)
                 const block = document.createElement('button');
                 block.className = 'event-block';
-                block.textContent = event.name;
+                block.textContent = ''; // Remove text from the block
                 block.dataset.eventId = event.id;
                 
                 // Apply custom color if available
@@ -1132,30 +1132,118 @@
                 const left = ((eventStartInViewport - viewportStartHour) / viewportRange) * 100;
                 const width = ((eventEndInViewport - eventStartInViewport) / viewportRange) * 100;
                 
-                // Calculate top position based on row assignment
-                const rowHeight = 50; // Height of each row in pixels
-                const topPosition = rowIndex * rowHeight; // Position based on row
-                
+                // Position event on a single row with space for text labels
                 block.style.position = 'absolute';
                 block.style.left = left + '%';
                 block.style.width = width + '%';
-                block.style.top = topPosition + 'px';
-                block.style.height = (rowHeight - 2) + 'px'; // Slight gap between rows
+                block.style.top = '20px'; // Leave 20px at top for text labels
+                block.style.height = '48px'; // Fixed height for single row
                 
-                // Smart font sizing based on event width (simple and safe enhancement)
-                if (width < 3) {
-                    // Very narrow events: smaller font and abbreviated text
-                    block.style.fontSize = '0.7rem';
-                    block.textContent = event.name.split(' ')[0]; // Just first word
-                } else if (width < 6) {
-                    // Narrow events: smaller font
-                    block.style.fontSize = '0.75rem';
-                } else if (width < 10) {
-                    // Medium events: slightly smaller font
-                    block.style.fontSize = '0.85rem';
+                // Create text label positioned above or below the event block
+                const textLabel = document.createElement('div');
+                textLabel.className = 'event-text-label';
+                textLabel.textContent = event.name;
+                textLabel.dataset.eventId = event.id;
+                
+                // Position the text label
+                textLabel.style.position = 'absolute';
+                textLabel.style.left = left + '%';
+                textLabel.style.width = width + '%';
+                textLabel.style.fontSize = '0.85rem';
+                textLabel.style.fontWeight = '500';
+                textLabel.style.color = '#2a2a2a';
+                textLabel.style.textAlign = 'center';
+                textLabel.style.whiteSpace = 'nowrap';
+                textLabel.style.overflow = 'hidden';
+                textLabel.style.textOverflow = 'ellipsis';
+                textLabel.style.pointerEvents = 'none'; // Allow clicks to pass through to the block
+                textLabel.style.zIndex = '10';
+                
+                // Position above or below based on the 'bottom' property
+                if (event.bottom) {
+                    textLabel.style.top = '72px'; // Below the block (20px + 48px + 4px margin)
                 } else {
-                    // Wide events: normal font
-                    block.style.fontSize = '0.9rem';
+                    textLabel.style.top = '0px'; // Above the block in the reserved space
+                }
+                
+                // Smart font sizing based on event width
+                let finalText = event.name;
+                if (width < 3) {
+                    textLabel.style.fontSize = '0.7rem';
+                    finalText = event.name.split(' ')[0]; // Just first word for very narrow events
+                    textLabel.textContent = finalText;
+                } else if (width < 6) {
+                    textLabel.style.fontSize = '0.75rem';
+                } else if (width < 10) {
+                    textLabel.style.fontSize = '0.8rem';
+                } else {
+                    textLabel.style.fontSize = '0.85rem';
+                }
+                
+                // Create connector line based on actual text overflow
+                let connectorLine = null;
+                
+                // Create a temporary measurement element to check text overflow
+                const measureElement = document.createElement('div');
+                measureElement.style.position = 'absolute';
+                measureElement.style.visibility = 'hidden';
+                measureElement.style.whiteSpace = 'nowrap';
+                measureElement.style.fontSize = textLabel.style.fontSize;
+                measureElement.style.fontWeight = textLabel.style.fontWeight;
+                measureElement.style.fontFamily = 'Segoe UI, Arial, sans-serif';
+                measureElement.textContent = finalText; // Use the actual text that will be displayed
+                document.body.appendChild(measureElement);
+                
+                const textNaturalWidth = measureElement.offsetWidth;
+                document.body.removeChild(measureElement);
+                
+                // Calculate the available width for the text (as percentage of container)
+                const containerWidth = blocksContainer.offsetWidth || 800; // Fallback
+                const availableWidth = containerWidth * (width / 100);
+                
+                const needsConnector = textNaturalWidth > availableWidth + 5; // 5px tolerance
+                
+                if (needsConnector) {
+                    // Create connector line using the working approach
+                    connectorLine = document.createElement('div');
+                    connectorLine.className = 'event-connector-line';
+                    connectorLine.style.position = 'absolute';
+                    connectorLine.style.width = '2px';
+                    connectorLine.style.backgroundColor = '#888'; // Subtle gray color
+                    connectorLine.style.zIndex = '15';
+                    
+                    // Position connector at center of event box
+                    const centerPercent = left + (width / 2);
+                    connectorLine.style.left = centerPercent + '%';
+                    
+                    if (event.bottom) {
+                        // Line goes down from box to text with 10px gap
+                        connectorLine.style.top = '68px';
+                        connectorLine.style.height = '5px'; // Shorter to leave 10px gap before text at 83px
+                    } else {
+                        // Line goes up from box to text with 10px gap  
+                        connectorLine.style.top = '5px';
+                        connectorLine.style.height = '5px'; // Shorter to leave 10px gap before text at -10px
+                    }
+                    
+                    // Adjust text positioning for connector with 5px gap
+                    textLabel.style.width = 'auto';
+                    textLabel.style.left = (left + (width / 2)) + '%';
+                    textLabel.style.transform = 'translateX(-50%)';
+                    textLabel.style.whiteSpace = 'nowrap';
+                    textLabel.style.overflow = 'visible';
+                    
+                    // Adjust vertical position to create 10px gap from connector line
+                    if (event.bottom) {
+                        textLabel.style.top = '83px'; // 68px + 5px connector + 10px gap
+                    } else {
+                        textLabel.style.top = '-10px'; // Move text up 10px from original 0px position
+                    }
+                } else {
+                    // No connector needed - center text within box width
+                    textLabel.style.width = width + '%';
+                    textLabel.style.left = left + '%';
+                    textLabel.style.transform = 'none';
                 }
                 
                 // Add click event to show popup
@@ -1175,14 +1263,18 @@
                     openEditEventForm(event.id);
                 });
                 
+                // Add elements to container
                 blocksContainer.appendChild(block);
+                if (connectorLine) {
+                    blocksContainer.appendChild(connectorLine);
+                }
+                blocksContainer.appendChild(textLabel);
             }
         });
         
-        // Calculate the exact height needed based on rows (each row is 50px high)
-        const eventsHeight = (maxRow + 1) * 50; // Height of all events rows
-          // Set the events container height (keeps event sizes the same)
-        blocksContainer.style.height = Math.max(50, eventsHeight) + 'px';
+        // Set height accounting for text labels above and below
+        const eventsHeight = 90; // 48px for block + 20px above + 22px below for text labels
+        blocksContainer.style.height = eventsHeight + 'px';
         
         // Get the title height
         const sectionTitle = section.querySelector('.section-title');
@@ -1575,6 +1667,7 @@
         document.getElementById('eventEndHour').value = '';
         document.getElementById('eventEndMinute').value = '';
         document.getElementById('eventColor').value = '#2ecc40'; // Default green
+        document.getElementById('eventTextBottom').checked = false; // Default to text above
         
         // Show the form
         showSection('eventFormSection');
@@ -1608,7 +1701,11 @@
         } else {
             document.getElementById('editEventColor').value = '#2ecc40'; // Default green
         }
-          // Show the edit form
+        
+        // Set text position if available
+        document.getElementById('editEventTextBottom').checked = event.bottom || false;
+          
+        // Show the edit form
         showSection('editEventSection');
     }
     
@@ -1641,11 +1738,12 @@
             return;
         }
         
-        // Get selected color
+        // Get selected color and text position
         const color = document.getElementById('eventColor').value;
+        const bottom = document.getElementById('eventTextBottom').checked;
         
         // Create the event
-        createEvent(name, startHour, startMinute, endHour, endMinute, section, color);
+        createEvent(name, startHour, startMinute, endHour, endMinute, section, color, bottom);
           // Close the form
         showSection(null);
     }
@@ -1679,8 +1777,9 @@
             return;
         }
         
-        // Get selected color
+        // Get selected color and text position
         const color = document.getElementById('editEventColor').value;
+        const bottom = document.getElementById('editEventTextBottom').checked;
         
         // Get section if available
         let section;
@@ -1697,7 +1796,8 @@
             endHour, 
             endMinute, 
             color,
-            section 
+            section,
+            bottom
         })) {
             // Close the form
             showSection(null);
@@ -2058,35 +2158,35 @@
             }
         }
     });
-      // Function to create test events with overlaps (for development purposes)
-    function createTestEventsWithOverlaps() {
+      // Function to create test events (for development purposes)
+    function createTestEvents() {
         // Clear existing events
         allEvents = [];
         currentEventId = 0;
         
-        // Create events for section 1 with various overlaps
-        createEvent('J.H. & R.W.', 9, 0, 9, 20, 'section1', '#f39c12');
-        createEvent('R.W. & J.H.', 9, 20, 9, 45, 'section1', '#f39c12');
-        createEvent('UP-LOS', 9, 12, 9, 45, 'section1', '#9b59b6');
-        createEvent('UP-LOS', 10, 12, 10, 54, 'section1', '#9b59b6');
-        createEvent('DWN-LOS', 10, 12, 10, 54, 'section1', '#9b59b6');
-        createEvent('V.G. & C.K.', 10, 0, 10, 20, 'section1', '#3498db');
-        createEvent('C.K. & V.G.', 10, 20, 10, 45, 'section1', '#3498db');
-        createEvent('J.H. & R.W.', 11, 0, 11, 20, 'section1', '#f39c12');
-        createEvent('R.W. & J.H.', 11, 20, 11, 45, 'section1', '#f39c12');
+        // Create events for section 1 with mixed text positioning and varying name lengths
+        createEvent('Short Task', 9, 0, 9, 15, 'section1', '#f39c12', false); // Text above, short name
+        createEvent('This is a Much Longer Event Name', 9, 20, 9, 35, 'section1', '#f39c12', true); // Text below, long name
+        createEvent('UP-LOS', 9, 40, 10, 0, 'section1', '#9b59b6', false); // Text above
+        createEvent('Extended Mission Planning Session', 10, 12, 10, 30, 'section1', '#9b59b6', true); // Text below, very long name
+        createEvent('DWN', 10, 35, 10, 45, 'section1', '#9b59b6', false); // Text above, very short name
+        createEvent('Meeting', 11, 0, 11, 15, 'section1', '#3498db', false); // Text above
+        createEvent('Comprehensive System Review and Analysis', 11, 20, 11, 30, 'section1', '#3498db', true); // Text below, extremely long name
+        createEvent('Brief', 11, 35, 11, 50, 'section1', '#e74c3c', false); // Text above, short name
+        createEvent('Final Coordination Call', 12, 0, 12, 20, 'section1', '#f39c12', true); // Text below, medium name
 
-        // Create events for section 2 SER TAB
-        createEvent('Flyby', 8, 0, 13, 30, 'section2', '#2ecc40');
-        createEvent('Pre Brief', 8, 1, 8, 30, 'section2', '#3498db');
-        createEvent('DP', 9, 50, 10, 0, 'section2', '#e74c3c');
-        createEvent('DP', 10, 50, 11, 0, 'section2', '#e74c3c');
-        createEvent('DP', 11, 50, 12, 0, 'section2', '#e74c3c');
-        createEvent('Shift Debrief', 12, 30, 13, 0, 'section2', '#9b59b6');
-        createEvent('Handover', 13, 0, 13, 30, 'section2', '#3498db');
+        // Create events for section 2 SER TAB with mixed text positioning
+        createEvent('Flyby', 8, 0, 13, 30, 'section2', '#2ecc40', false); // Text above
+        createEvent('Pre Brief', 8, 1, 8, 30, 'section2', '#3498db', true); // Text below
+        createEvent('DP', 9, 50, 10, 0, 'section2', '#e74c3c', false); // Text above
+        createEvent('DP', 10, 50, 11, 0, 'section2', '#e74c3c', true); // Text below
+        createEvent('DP', 11, 50, 12, 0, 'section2', '#e74c3c', false); // Text above
+        createEvent('Shift Debrief', 12, 30, 13, 0, 'section2', '#9b59b6', true); // Text below
+        createEvent('Handover', 13, 0, 13, 30, 'section2', '#3498db', false); // Text above
 
-        // Create events for section 3
-        createEvent('Downlink I', 13, 0, 17, 36, 'section3', '#2ecc40');
-        createEvent('Handover', 13, 1, 13, 30, 'section3', '#3498db');
+        // Create events for section 3 with mixed text positioning
+        createEvent('Downlink I', 13, 0, 17, 36, 'section3', '#2ecc40', false); // Text above
+        createEvent('Handover', 13, 1, 13, 30, 'section3', '#3498db', true); // Text below
         
         updateNextEventCountdown();
     }
@@ -2209,7 +2309,7 @@
             document.getElementById('viewportEndHour').value = 24;
             
             // Create default test events
-            createTestEventsWithOverlaps();
+            createTestEvents();
             
             // Re-render
             renderStaticHashmarks();
