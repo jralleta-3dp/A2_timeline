@@ -473,7 +473,7 @@
             padding: 6px 12px;
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
-            font-size: 0.85rem;
+            font-size: 1.25rem;
             color: #444c5e;
             display: flex;
             align-items: center;
@@ -863,7 +863,7 @@
     let viewportEndHour = 24;
     
     // Function to create an event with minute precision
-    function createEvent(name, startHour, startMinute, endHour, endMinute, section = "section1", color = "#2ecc40", bottom = false) {
+    function createEvent(name, startHour, startMinute, endHour, endMinute, section = "section1", color = "#2ecc40", bottom = false, stack = false) {
         const id = currentEventId++;
         
         // Convert to decimal hours for positioning (e.g., 1:30 becomes 1.5)
@@ -882,6 +882,7 @@
             section,
             color,  // Store the event color
             bottom  // Store whether text should appear below the box
+            ,stack  // Store whether this event should be stacked
         };
         
         allEvents.push(event);
@@ -1142,7 +1143,36 @@
                 block.style.position = 'absolute';
                 block.style.left = left + '%';
                 block.style.width = width + '%';
-                block.style.top = '60px'; // Leave 60px at top for text labels positioned 50px above
+
+                // Default top for main row
+                const baseRowTop = 60; // px
+                const rowHeight = 48; // px
+                const rowGap = 8; // px gap between rows
+
+                // Determine if this event should be stacked under a target event (e.g., Plan. Kickoff)
+                let isStacked = false;
+                if (event.stack) {
+                    // Look for a Plan. Kickoff event in the same section
+                    const target = allEvents.find(evt => evt.section === event.section && evt.name === 'Plan. Kickoff');
+                    if (target) {
+                        // Check for time overlap
+                        const targetStart = target.start;
+                        const targetEnd = target.end;
+                        const eventStart = event.start;
+                        const eventEnd = event.end;
+                        const overlaps = eventStart < targetEnd && eventEnd > targetStart;
+                        if (overlaps) {
+                            isStacked = true;
+                        }
+                    }
+                }
+
+                if (isStacked) {
+                    // Place on second row below the main row
+                    block.style.top = (baseRowTop + rowHeight + rowGap) + 'px';
+                } else {
+                    block.style.top = baseRowTop + 'px'; // Leave 60px at top for text labels positioned 50px above
+                }
                 block.style.height = '48px'; // Fixed height for single row
                 
                 // Override minimum width for 5-minute events
@@ -1170,10 +1200,11 @@
                 textLabel.style.zIndex = '10';
                 
                 // Position above or below based on the 'bottom' property (close to event box)
+                const numericRowTop = parseInt(block.style.top, 10);
                 if (event.bottom) {
-                    textLabel.style.top = '118px'; // Below the block (60px + 48px + 10px margin)
+                    textLabel.style.top = (numericRowTop + rowHeight + 10) + 'px'; // Below the block
                 } else {
-                    textLabel.style.top = '40px'; // Just above the event block at 60px (20px gap)
+                    textLabel.style.top = (numericRowTop - 20) + 'px'; // Just above the event block
                 }
                 
                 // Smart font sizing based on event width (but keep full text)
@@ -1226,29 +1257,37 @@
                     // Position connector at center of event box
                     const centerPercent = left + (width / 2);
                     connectorLine.style.left = centerPercent + '%';
-                    
+
+                    // numericRowTop already computed earlier
+
                     if (event.bottom) {
                         // Line goes down from box to text with extended length
-                        connectorLine.style.top = '108px'; // After the event block at 60px + 48px height
+                        connectorLine.style.top = (numericRowTop + rowHeight) + 'px'; // After the event block
                         connectorLine.style.height = '25px'; // Extended by 20px
                     } else {
                         // Line goes up from box to text with extended length  
-                        connectorLine.style.top = '35px'; // From 50px above to event block at 60px
+                        connectorLine.style.top = (numericRowTop - 25) + 'px'; // Above the event block
                         connectorLine.style.height = '25px'; // Extended by 20px
                     }
                     
-                    // Adjust text positioning for connector with 5px gap
+                        // numericRowTop already computed earlier
+
+                        // Adjust text positioning for connector with 5px gap
                     textLabel.style.width = 'auto';
                     textLabel.style.left = (left + (width / 2)) + '%';
                     textLabel.style.transform = 'translateX(-50%)';
                     textLabel.style.whiteSpace = 'nowrap';
                     textLabel.style.overflow = 'visible';
                     
-                    // Adjust vertical position - 50px above the event line
+                    // Adjust vertical position - 50px above/below the event block depending on row
+                    const connectorHeight = parseInt(connectorLine.style.height, 10);
+                    const gap = 10; // gap between connector end and text
                     if (event.bottom) {
-                        textLabel.style.top = '143px'; // Below: 108px + 25px connector + 10px gap
+                        // place text below the block (block bottom + connector + gap)
+                        textLabel.style.top = (numericRowTop + rowHeight + connectorHeight + gap) + 'px';
                     } else {
-                        textLabel.style.top = '10px'; // Above: 50px above the event block at 60px
+                        // place text above the block (block top - 50px)
+                        textLabel.style.top = (numericRowTop - 50) + 'px';
                     }
                 } else {
                     // No connector needed - center text within box width
@@ -1283,8 +1322,10 @@
             }
         });
         
-        // Set height accounting for text labels 50px above and extended connectors
-        const eventsHeight = 130; // Increased to accommodate 50px text positioning + connectors
+    // Set height accounting for text labels 50px above and extended connectors
+    // If any stacked events exist in this section, increase height to make room for second row
+    const hasStackedInSection = sectionEvents.some(evt => evt.stack);
+    const eventsHeight = hasStackedInSection ? 190 : 130; // Increased to accommodate stacked row when necessary
         blocksContainer.style.height = eventsHeight + 'px';
         
         // Get the title height
@@ -1754,7 +1795,8 @@
         const bottom = document.getElementById('eventTextBottom').checked;
         
         // Create the event
-        createEvent(name, startHour, startMinute, endHour, endMinute, section, color, bottom);
+    // For UI-created events, default stack to false (no stacking checkbox yet)
+    createEvent(name, startHour, startMinute, endHour, endMinute, section, color, bottom, false);
           // Close the form
         showSection(null);
     }
@@ -2200,8 +2242,9 @@
         createEvent('Handover', 13, 0, 13, 30, 'section2', '#3498db', false); // Text above
         createEvent('Plan. Kickoff', 13, 45, 14, 15, 'section2', '#9b59b6', false); // Text above
         createEvent('Replan Review', 16, 0, 16, 30, 'section2', '#1abc9c', false); // Text above
-        createEvent('Crew Questions DUE', 13, 30, 13, 35, 'section2', '#e74c3c', true); // Text below
+        createEvent('Science Tag', 13, 30, 14, 30, 'section2', '#e67e22', true, true); // Text below, stacked under Plan. Kickoff
         createEvent('Ex. Pkg DUE', 16, 30, 16, 35, 'section2', '#e74c3c', true); // Text below
+        createEvent('Crew Qs DUE', 13, 30, 13, 35, 'section2', '#e74c3c', true); // Text below
 
 
         // Create events for section 3 with mixed text positioning
