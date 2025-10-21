@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>A2 Timeline</title>
+    <title>A3 Timeline</title>
     <style>
         body {
             margin: 0;
@@ -2220,41 +2220,45 @@
         //true === text below
 
         // Create events for section 1 with mixed text positioning and varying name lengths MISSION
-        createEvent('Prebreathe', 7, 0, 9, 30, 'section1', '#2ecc40', false);
-        createEvent('EVA 2', 10, 0, 12, 30, 'section1', '#f1c40f', false); // Text above
-        createEvent('Depress', 9, 30, 10, 0, 'section1', '#e67e22', false); // Text above
-        createEvent('Repress', 12, 30, 13, 0, 'section1', '#e67e22', false); // Text above
-        createEvent('Post-EVA', 13, 0, 14, 30, 'section1', '#3498db', false); // Text above
-        createEvent('IVA Dust', 14, 30, 15, 0, 'section1', '#9b59b6', false); // Text above
-        createEvent('EVA Conf', 15, 0, 16, 0, 'section1', '#f39c12', false); // Text above
-        createEvent('EVA Study', 16, 0, 16, 30, 'section1', '#1abc9c', true); // Text below
-        createEvent('Tool Prep', 16, 30, 17, 0, 'section1', '#34495e', false); // Text above
-        createEvent('Pre Sleep', 17, 0, 19, 0, 'section1', '#7f8c8d', false); // Text above
+        createEvent('Prebreathe', 7, 15, 9, 45, 'section1', '#2ecc40', false);
+        createEvent('EVA 2', 10, 15, 12, 45, 'section1', '#f1c40f', false); // Text above
+        createEvent('Depress', 9, 45, 10, 15, 'section1', '#e67e22', false); // Text above
+        createEvent('Repress', 12, 45, 13, 15, 'section1', '#e67e22', false); // Text above
+        createEvent('Post-EVA', 13, 15, 14, 45, 'section1', '#3498db', false); // Text above
+        createEvent('IVA Dust', 14, 45, 15, 15, 'section1', '#9b59b6', false); // Text above
+        createEvent('EVA Conf', 15, 15, 16, 15, 'section1', '#f39c12', false); // Text above
+        createEvent('Crew Conf', 15, 15, 16, 15, 'section2', '#f39c12', false); // Text above
+        createEvent('Crew Conf', 15, 15, 16, 15, 'section3', '#f39c12', false); // Text above
+        createEvent('EVA Study', 16, 15, 16, 45, 'section1', '#1abc9c', true); // Text below
+        createEvent('Tool Prep', 16, 45, 17, 15, 'section1', '#34495e', false); // Text above
+        createEvent('Pre Sleep', 17, 15, 19, 15, 'section1', '#7f8c8d', false); // Text above
 
 
         // Create events for section 2 SER TAB with mixed text positioning
         //createEvent('DP', 11, 50, 12, 0, 'section2', '#e74c3c', false); // Text above
         //createEvent('Shift Debrief', 12, 30, 13, 0, 'section2', '#9b59b6', true); // Text below
         //createEvent('Handover', 13, 0, 13, 30, 'section2', '#3498db', false); // Text above
-        createEvent('Ex. Shift Start', 8, 0, 8, 15, 'section2', '#2ecc40', false); //text above
-        createEvent('Ex. Kickoff', 9, 0, 9, 30, 'section2', '#f1c40f', false); // Text above
-        createEvent('EVA Replan', 12, 15, 12, 45, 'section2', '#e67e22', false); // Text above
-        createEvent('Handover', 13, 0, 13, 30, 'section2', '#3498db', false); // Text above
-        createEvent('Plan. Kickoff', 13, 45, 14, 15, 'section2', '#9b59b6', false); // Text above
-        createEvent('Replan Review', 16, 0, 16, 30, 'section2', '#1abc9c', false); // Text above
-        createEvent('Science Tag', 13, 30, 14, 30, 'section2', '#e67e22', true, true); // Text below, stacked under Plan. Kickoff
-        createEvent('Ex. Pkg DUE', 16, 30, 16, 35, 'section2', '#e74c3c', true); // Text below
-        createEvent('Crew Qs DUE', 13, 30, 13, 35, 'section2', '#e74c3c', true); // Text below
-
+        createEvent('Ex. Shift Start', 8, 15, 8, 30, 'section2', '#2ecc40', false); //text above
+        createEvent('Ex. Kickoff', 9, 15, 9, 45, 'section2', '#f1c40f', false); // Text above
+        createEvent('Handover', 13, 15, 13, 45, 'section2', '#3498db', false); // Text above
+        createEvent('Plan. Kickoff', 14, 0, 14, 30, 'section2', '#9b59b6', false); // Text above
+        createEvent('Science Tag', 13, 45, 14, 45, 'section2', '#e67e22', true, true); // Text below, stacked under Plan. Kickoff
+        createEvent('Science Ex. Pkg DUE', 17, 15, 15, 20, 'section2', '#e74c3c', true); // Text below
+        createEvent('Crew Qs DUE', 13, 45, 13, 50, 'section2', '#e74c3c', true); // Text below
+        createEvent('Science Replan DUE', 16, 15, 16, 20, 'section2', '#e74c3c', true); //text below
+        createEvent('Replan and Ex. Review', 17, 15, 17, 45, 'section2', '#1abc9c', false); // Text above
 
         // Create events for section 3 with mixed text positioning
         //createEvent('Downlink I', 13, 0, 17, 36, 'section3', '#2ecc40', false); // Text above
         //createEvent('Handover', 13, 1, 13, 30, 'section3', '#3498db', true); // Text below
-        createEvent('Ex. Shift Start', 8, 0, 8, 15, 'section3', '#2ecc40', false); //text above
-        createEvent('Ex. Kickoff', 9, 0, 9, 30, 'section3', '#f1c40f', false); // Text above
-        createEvent('Handover', 13, 0, 13, 30, 'section3', '#3498db', false); // Text above
-        createEvent('Plan. Kickoff', 13, 45, 14, 15, 'section3', '#9b59b6', false); // Text above
-        createEvent('Replan Review', 16, 0, 16, 30, 'section3', '#1abc9c', false); // Text above
+        createEvent('Ex. Shift Start', 8, 15, 8, 30, 'section3', '#2ecc40', false); //text above
+        createEvent('Ex. Kickoff', 9, 15, 9, 45, 'section3', '#f1c40f', false); // Text above
+        createEvent('Handover', 13, 15, 13, 45, 'section3', '#3498db', false); // Text above
+        createEvent('Plan. Kickoff', 14, 0, 14, 30, 'section3', '#9b59b6', false); // Text above
+        createEvent('Replan and Ex. Review', 17, 15, 17, 45, 'section3', '#1abc9c', false); // Text above
+
+
+        
 
         updateNextEventCountdown();
     }
